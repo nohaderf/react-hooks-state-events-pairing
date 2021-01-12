@@ -8,8 +8,15 @@ function App() {
 
   const [likesCount, setLikesCount] = useState(video.upvotes)
   const [dislikesCount, setDislikesCount] = useState(video.downvotes)
+  const [userSearch, setUserSearch] = useState("");
 
-  const videoComments = video.comments.map((comment) => {
+  const filteredUserComments = video.comments.filter((comment) => {
+    return comment.user.toLowerCase().includes(userSearch.toLowerCase());
+  });
+
+  console.log("filteredUserComments", filteredUserComments);
+
+  const videoComments = filteredUserComments.map((comment) => {
     return (
     <Comments key={comment.id} user={comment.user} comment={comment.comment} />
     )
@@ -22,8 +29,6 @@ function App() {
   function handleDislikesClick(){
     setDislikesCount((disLikesCount) => dislikesCount - 1)
   }
-
-
 
   return (
     <div className="App">
@@ -40,11 +45,11 @@ function App() {
       <button onClick={handleLikesClick}>{likesCount} 👍</button><button onClick={handleDislikesClick}>{dislikesCount} 👎</button>
       <hr></hr>
       <input
-        // onChange={(e) => setProjectSearch(e.target.value)}
+        onChange={(e) => setUserSearch(e.target.value)}
         type="text"
         placeholder="Search..."
       />
-      <h2>Comments</h2>
+      <h2>{videoComments.length} Comments</h2>
       {videoComments}
     </div>
   );
